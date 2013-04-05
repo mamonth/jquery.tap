@@ -1,20 +1,27 @@
 ;(function($, undefined) {
-  var incrementalElementId = 0;
-  var mutex = 0;
+  var incrementalElementId = 0,
+      mutex = 0,
+      dpr = undefined !== window.devicePixelRatio ? window.devicePixelRatio : 1 ;
+
   $.fn.tap = function(threshold, callback) {
     if (typeof threshold === 'function') {
       callback = threshold;
-      threshold = 15;
+      threshold = 20;
     }
+    
+    // calculate move treshold with device pixel ratio
+    threshold = threshold * dpr;
+    
     if ('ontouchstart' in window) {
       this.each(function() {
-        var moveDistance = 0;
-        var touch = null;
-        var elementId = ++incrementalElementId;
-        var startPoint = null
-        var touching = false;
-        var self = this;
-        var $self = $(this);
+        
+        var moveDistance = 0,
+            touch = null,
+            elementId = ++incrementalElementId,
+            startPoint = null,
+            touching = false,
+            self = this,
+            $self = $(this);
 
         $self.bind('touchstart', function(e) {
           if (mutex != 0) return;
